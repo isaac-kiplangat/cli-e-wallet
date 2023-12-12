@@ -1,5 +1,5 @@
 from sqlalchemy import create_engine, Column, Integer, String, Float, Sequence
-from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import declarative_base
 from sqlalchemy.orm import sessionmaker
 
 Base = declarative_base()
@@ -10,16 +10,20 @@ class User(Base):
     username = Column(String(50), unique=True, nullable=False)
     password = Column(String(50), nullable=False)
     balance = Column(Float, default=0.0)
+    # transactions = relationship('Transaction', back_populates='user')
 
-engine = create_engine('sqlite:///:memory:')  # Use your desired database connection URL
+engine = create_engine('sqlite:///users.db')  # Use your desired database connection URL
 Base.metadata.create_all(engine)
 Session = sessionmaker(bind=engine)
 session = Session()
+
 
 def create_user(username, password):
     new_user = User(username=username, password=password)
     session.add(new_user)
     session.commit()
+    print(f"User {username} added successfully.")
+
 
 def deposit(username, amount):
     user = session.query(User).filter_by(username=username).first()
@@ -56,6 +60,7 @@ def get_balance(username):
 def main():
     while True:
         print("\nE-Wallet CLI:")
+        print("0. Create Account")
         print("1. Deposit")
         print("2. Withdraw")
         print("3. Transfer")
@@ -63,8 +68,13 @@ def main():
         print("5. Exit")
 
         choice = input("Enter your choice (1-5): ")
+        if choice == "0":
+          username = input("Enter a Username: ")
+          password = input ("Enter a new Password: ")
+          
+          create_user(username,password)
 
-        if choice == "1":
+        elif choice == "1":
             username = input("Enter username: ")
             amount = float(input("Enter amount to deposit: "))
             deposit(username, amount)
