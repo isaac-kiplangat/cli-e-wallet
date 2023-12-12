@@ -1,9 +1,10 @@
 # user.py
 from sqlalchemy import create_engine, Column, Integer, String, Float, Sequence, DateTime, ForeignKey
-from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import declarative_base
 from sqlalchemy.orm import relationship
 from datetime import datetime
 
+engine = create_engine('sqlite:///users.db')  # Use your desired database connection URL
 
 
 Base = declarative_base()
@@ -24,3 +25,4 @@ class Transaction(Base):
     amount = Column(Float, nullable=False)
     timestamp = Column(DateTime, default=datetime.utcnow)
     user = relationship('User', back_populates='transactions')
+Base.metadata.create_all(engine)

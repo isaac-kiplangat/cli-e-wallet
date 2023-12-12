@@ -1,24 +1,28 @@
 # wallet.py
+from user import Base, engine
 
-from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import create_engine
 from user import User, Transaction
 from sqlalchemy.orm import sessionmaker
 
-Base = declarative_base()
 
+Base.metadata.create_all(engine)
 
-engine = create_engine('sqlite:///users.db')  # Use your desired database connection URL
+engine = create_engine('sqlite:///users.db')  
 Base.metadata.create_all(engine)
 Session = sessionmaker(bind=engine)
 session = Session()
 
 def create_user(username, password):
-    new_user = User(username=username, password=password)
-    session.add(new_user)
-    session.commit()
-    print(f"User {username} added successfully.")
-
+    existing_user = session.query(User).filter(User.username == username).first()
+    
+    if existing_user:
+        print("Username already exists. Please choose another.")
+    else:
+        new_user = User(username=username, password=password)
+        session.add(new_user)
+        session.commit()
+        print(f"User {username} added successfully.")
 
 def deposit(username, amount):
     user = session.query(User).filter_by(username=username).first()
