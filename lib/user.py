@@ -12,7 +12,7 @@ class User(Base):
     balance = Column(Float, default=0.0)
     # transactions = relationship('Transaction', back_populates='user')
 
-engine = create_engine('sqlite:///users.db')  # Use your desired database connection URL
+engine = create_engine('sqlite:///users.db') 
 Base.metadata.create_all(engine)
 Session = sessionmaker(bind=engine)
 session = Session()
