@@ -48,8 +48,18 @@ def withdraw(username, amount):
         print(f"User {username} not found.")
 
 def transfer(sender, recipient, amount):
-    withdraw(sender, amount)
-    deposit(recipient, amount)
+    sender_user = session.query(User).filter_by(username=sender).first()
+    recipient_user = session.query(User).filter_by(username=recipient).first()
+
+    if sender_user and recipient_user:
+        if sender_user.balance >= amount >= 0:
+            withdraw(sender, amount)
+            deposit(recipient, amount)
+            print(f"Transferred {amount} from {sender} to {recipient}")
+        else:
+            print("Insufficient funds or invalid amount")
+    else:
+        print(f"User not found. Check sender: {sender} and recipient: {recipient}")
 
 def get_balance(username):
     user = session.query(User).filter_by(username=username).first()
