@@ -17,10 +17,20 @@ To run this project localy
  pipenv shell
  ```
 
- you can run the project in the project folder by
- ```python
- python lib/main.py
- ```
+### Project Overview
+- lib: Contains the main project files.
 
- happy coding, feel free to give feedback
+- main.py: Entry point for the E-Wallet CLI.
+Other project files.
+### Usage
+
+- Create a new user account.
+- Deposit funds into the wallet.
+- Withdraw funds from the wallet.
+- Transfer funds to another user.
+- Check the wallet balance.
+ 
+
+
+ #### Happy coding, Feel free to give feedback
 
