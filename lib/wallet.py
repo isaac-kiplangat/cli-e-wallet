@@ -1,10 +1,10 @@
 # wallet.py
 from user import Base, engine
-
 from sqlalchemy import create_engine
 from user import User, Transaction
 from sqlalchemy.orm import sessionmaker
 
+#initialize
 
 Base.metadata.create_all(engine)
 
@@ -13,6 +13,7 @@ Base.metadata.create_all(engine)
 Session = sessionmaker(bind=engine)
 session = Session()
 
+#function to create User
 def create_user(username, password):
     existing_user = session.query(User).filter(User.username == username).first()
     
@@ -23,9 +24,14 @@ def create_user(username, password):
         session.add(new_user)
         session.commit()
         print(f"User {username} added successfully.")
+#function for authentication
+def authenticate(username, password):
+    user = session.query(User).filter_by(username=username, password=password).first()
+    return user
 
-def deposit(username, amount):
-    user = session.query(User).filter_by(username=username).first()
+#function to deposit funds
+def deposit(username,password, amount):
+    user = authenticate(username,password)
     if user:
         user.balance += amount
         transaction = Transaction(user=user, type='deposit', amount=amount)
@@ -33,10 +39,12 @@ def deposit(username, amount):
         session.commit()
         print(f"Deposited {amount} into {username}'s account. New balance: {user.balance}")
     else:
-        print(f"User {username} not found.")
+        print(f"User {username} not found or invalid password.")
         
-def withdraw(username, amount):
-    user = session.query(User).filter_by(username=username).first()
+
+#function for widthrawing
+def withdraw(username, password, amount):
+    user = authenticate(username, password)
     if user:
         if user.balance >= amount:
             user.balance -= amount
@@ -45,10 +53,12 @@ def withdraw(username, amount):
         else:
             print("Insufficient funds.")
     else:
-        print(f"User {username} not found.")
+        print(f"invalid passord or user {username} not found.")
+        
 
-def transfer(sender, recipient, amount):
-    sender_user = session.query(User).filter_by(username=sender).first()
+#function for transfering
+def transfer(sender, recipient, password, amount):
+    sender_user = authenticate(sender,password)
     recipient_user = session.query(User).filter_by(username=recipient).first()
 
     if sender_user and recipient_user:
@@ -59,12 +69,13 @@ def transfer(sender, recipient, amount):
         else:
             print("Insufficient funds or invalid amount")
     else:
-        print(f"User not found. Check sender: {sender} and recipient: {recipient}")
+        print(f"User not found. Check sender: {sender} and recipient: {recipient} or invalid password")
 
-def get_balance(username):
-    user = session.query(User).filter_by(username=username).first()
+#function for checking balance
+def get_balance(username,password):
+    user = authenticate(username,password)
     if user:
         print(f"{username}'s current balance: {user.balance}")
     else:
-        print(f"User {username} not found.")
+        print(f"User {username} not found. or invalid password")
 

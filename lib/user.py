@@ -4,11 +4,13 @@ from sqlalchemy.orm import declarative_base
 from sqlalchemy.orm import relationship
 from datetime import datetime
 
+#initiliaze db
 engine = create_engine('sqlite:///users.db')  # Use your desired database connection URL
 
 
 Base = declarative_base()
 
+#users tables Schema
 class User(Base):
     __tablename__ = 'users'
     id = Column(Integer, Sequence('user_id_seq'), primary_key=True)
@@ -17,6 +19,7 @@ class User(Base):
     balance = Column(Float, default=0.0)
     transactions = relationship('Transaction', back_populates='user')
 
+#transaction table schema
 class Transaction(Base):
     __tablename__ = 'transactions'
     id = Column(Integer, Sequence('transaction_id_seq'), primary_key=True)

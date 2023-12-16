@@ -4,6 +4,7 @@ from wallet import create_user, deposit, withdraw, transfer, get_balance
 
 
 def main():
+    #initilize input descriptions
     while True:
         print("\nE-Wallet CLI:")
         print("0. Create Account")
@@ -13,6 +14,7 @@ def main():
         print("4. Balance Inquiry")
         print("5. Exit")
 
+#manage inputs
         choice = input("Enter your choice (0-5): ")
         if choice == "0":
           username = input("Enter a Username: ")
@@ -23,20 +25,23 @@ def main():
         elif choice == "1":
             username = input("Enter username: ")
             amount = float(input("Enter amount to deposit: "))
-            deposit(username, amount)
+            password = input("Enter password: ")
+            deposit(username,password, amount)
         elif choice == "2":
             username = input("Enter username: ")
-            amount = float(input("Enter amount to withdraw: "))
             password = input("Enter password: ")
-            withdraw(username, amount)
+            amount = float(input("Enter amount to withdraw: "))
+            withdraw(username, password, amount)
         elif choice == "3":
             sender = input("Enter sender username: ")
             recipient = input("Enter recipient username: ")
             amount = float(input("Enter amount to transfer: "))
-            transfer(sender, recipient, amount)
+            sender_password = input("Enter password: ")
+            transfer(sender, recipient,sender_password, amount)
         elif choice == "4":
             username = input("Enter username: ")
-            get_balance(username)
+            password = input("Enter password: ")
+            get_balance(username, password)
         elif choice == "5":
             print("Exiting E-Wallet CLI. Goodbye!")
             break
